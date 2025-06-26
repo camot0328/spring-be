@@ -1,0 +1,60 @@
+name: beckend-autodeploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: git repository 가죠오기
+        uses: actions/checkout@v4
+
+      - name: JDK17 설치
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: application 실행파일 빌드
+        run: chmod +x ./gradlew && ./gradlew clean build
+
+      - name: docker 이미지 빌드
+        run: docker build -t ${{ secrets.DOCKER_USER }}/web-app:mixed .
+
+      - name: docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: docker 이미지 푸시하기
+        run: docker push ${{ secrets.DOCKER_USER }}/web-app:mixed
+
+  deploy-job:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: EC2 에 접속(ssh)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            # DockerHub 로그인 (private 이미지용)
+            echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+            # 기존 컨테이너 중지 및 삭제
+            docker stop spring || true
+            docker rm spring || true
+
+            # 변경된 이미지 가져오기
+            docker pull ${{ secrets.DOCKER_USER }}/web-app:latest
+
+            # 새 컨테이너 실행 (자동 재시작 옵션 포함)
+            docker run -d -p 8080:8080 --restart unless-stopped --name spring ${{ secrets.DOCKER_USER }}/web-app:latest
+          script_stop: true
