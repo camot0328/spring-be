@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*", methods = RequestMethod.GET)
+//@CrossOrigin(origins = "*", methods = RequestMethod.GET)
 public class MainController {
   @GetMapping("")
   public MoviesDto hello() {
