@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*", methods = RequestMethod.GET)
 public class MainController {
-  @GetMapping
+  @GetMapping("")
   public MoviesDto hello() {
     MoviesDto movies = new MoviesDto();
     MovieDto movieDto = new
