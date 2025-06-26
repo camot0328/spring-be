@@ -17,7 +17,7 @@ public class MainController {
   public MoviesDto hello() {
     MoviesDto movies = new MoviesDto();
     MovieDto movieDto = new
-        MovieDto(1,"testMovie","https://an2-img.amz.wtchn.net/image/v2/FztLWfhyYvbKEUPWo9EufQ.webp?jwt=ZXlKaGJHY2lPaUpJVXpJMU5pSjkuZXlKdmNIUnpJanBiSW1SZk1USTRNSGczTWpCeE9EQWlYU3dpY0NJNklpOTJNaTl6ZEc5eVpTOXBiV0ZuWlM4eE5qRTFPRE15T1RNME5qSXhORGsyTmpZMkluMC5lWHh6b3VxS240TElxSDlsRVI0QS1XY3ZISHVGbGxfX0dvVUhoLXhOSVR3","summaryTest");
+        MovieDto(1,"testMovie","https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrsxEJugnXfmMCF0Y9zmwVEvc1rRsMxMidNw&s","summaryTest");
         List<MovieDto> moviesList = new ArrayList<>();
     moviesList.add(movieDto);
     movies.setMovies(moviesList);
