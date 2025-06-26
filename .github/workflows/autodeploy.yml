@@ -46,15 +46,14 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             # DockerHub 로그인 (private 이미지용)
-            echo ${{ secrets.DOCKER_KEY }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+            # echo ${{ secrets.DOCKER_KEY }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
 
             # 기존 컨테이너 중지 및 삭제
             docker stop spring || true
             docker rm spring || true
 
-            # 변경된 이미지 가져오기
-            docker pull ${{ secrets.DOCKER_USER }}/web-app:latest
+            docker rmi ${{ secrets.DOCKER_USER }}/web-app:mixed || true
 
             # 새 컨테이너 실행 (자동 재시작 옵션 포함)
-            docker run -d -p 8080:8080 --restart unless-stopped --name spring ${{ secrets.DOCKER_USER }}/web-app:latest
+            docker run -d -p 8080:8080 --name spring ${{ secrets.DOCKER_USER }}/web-app:mixed
           script_stop: true
