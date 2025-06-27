@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/movies")
+@RequestMapping("/movies")
 @CrossOrigin(origins = "*", methods = RequestMethod.GET)
 public class MainController {
-  @GetMapping("/movies")
+  @GetMapping("")
   public MoviesDto hello() {
     MoviesDto movies = new MoviesDto();
     MovieDto movieDto = new
